@@ -29,11 +29,12 @@ int main(int argc, char* argv[]){
         best_values.clear();
         best_ipas.clear();
 
-        
-
         //loop through dict
         for(auto it = data.begin(); it != data.end(); it++){
             std::string dictStr = it.key();
+            if(str[0] != dictStr[0]){
+                continue;
+            }
             double score = rapidfuzz::fuzz::ratio(str, dictStr);
             jesus(dictStr, score, best_ipas, best_values);
         }
