@@ -3,9 +3,6 @@
 int main(int argc, char* argv[]){
     std::cout << "testing the rapidfuzz library:\n";
 
-    //get input string
-    std::string str1;
-
 
     //read file
     std::cout << "opening file...\n";
@@ -25,11 +22,18 @@ int main(int argc, char* argv[]){
         std::cout << it.key() << "\n";
     }
 
-    while(true){
-        std::getline(std::cin, str1);
-        if (data.contains(str1)) {
-            const auto& words = data[str1];  // this will be a json array
 
+    std::string str;
+    std::vector<std::string> best_ipas;
+    std::vector<double> best_values;
+
+    
+
+    while(true){
+        //get input string
+        std::getline(std::cin, str);
+        if(data.contains(str)){
+            const auto& words = data[str];
             for (const auto& word : words) {
                 std::cout << word << "\n";
             }
@@ -43,8 +47,6 @@ int main(int argc, char* argv[]){
     double score = rapidfuzz::fuzz::ratio(str1, str2);
 
     std::cout << "\nthe score between: \n\"" << str1 << "\"\n\"" << str2 << "\"\nis: " << score << "\n";
-
-
 
 */
 
