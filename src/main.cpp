@@ -1,77 +1,70 @@
 #include "../include/main.h"
 
+template <typename Sentence1,
+          typename Iterable, typename Sentence2 = typename Iterable::value_type>
+std::vector<std::pair<Sentence2, double>>
+extract(const Sentence1& query, const Iterable& choices, const double score_cutoff = 0.0)
+{
+    std::vector<std::pair<Sentence2, double>> results;
+    rapidfuzz::fuzz::CachedRatio<typename Sentence1::value_type> scorer(query);
 
-int main(int argc, char* argv[]){
+    for (const auto& choice : choices) {
+        double score = scorer.similarity(choice, score_cutoff);
+        if (score >= score_cutoff) {
+            results.emplace_back(choice, score);
+        }
+    }
+
+    return results;
+}
+
+int main(int argc, char* argv[]) {
     std::cout << "testing betterthai:\n";
 
-    //read file
-    std::cout << "opening file...\n";
+    // Read file
     std::ifstream dictfile("data/dict.json");
-    if(!dictfile){
+    if (!dictfile) {
         std::cout << "failed opening dictionary\n";
         return 1;
     }
-    std::cout << "done\n";
+
     std::cout << "parsing json...\n";
     json data = json::parse(dictfile);
     std::cout << "done\n";
 
-
-    std::vector<double> best_values;
-    std::vector<std::string> best_ipas;
-
+    // Extract all keys into a list
+    std::vector<std::string> ipa_keys;
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        ipa_keys.push_back(it.key());
+    }
 
     std::string str;
     std::cout << "string: ";
     std::getline(std::cin, str);
 
-    while(str != "exit"){
-        best_values.clear();
-        best_ipas.clear();
+    while (str != "exit") {
+        // Run fuzzy match
+        auto matches = extract<std::string, std::vector<std::string>>(str, ipa_keys, 0.0);
 
-        //loop through dict
-        for(auto it = data.begin(); it != data.end(); it++){
-            std::string dictStr = it.key();
-            double score = rapidfuzz::fuzz::ratio(str, dictStr);
-            jesus(dictStr, score, best_ipas, best_values);
+        // Sort by descending score
+        std::sort(matches.begin(), matches.end(),
+                  [](const auto& a, const auto& b) { return a.second > b.second; });
+
+        // Trim to top 20
+        if (matches.size() > 20) matches.resize(20);
+
+        std::cout << "Top matches:\n";
+        for (const auto& [match, score] : matches) {
+            std::cout << match << " (" << score << "):\n";
+            const auto& ipas = data[match];
+            for (const auto& ipa : ipas) {
+                std::cout << "  → " << ipa << "\n";
+            }
         }
-        std::cout << "done\n";
-        std::cout << "best IPAs:\n";
-        for(uint8_t i=0;i<best_ipas.size();i++){
-            std::cout << best_ipas[i] << ": " << best_values[i] << "\n";
-        }
 
-
-        std::cout << "string: ";
+        std::cout << "\nstring: ";
         std::getline(std::cin, str);
     }
 
-
     return 0;
-}
-
-void jesus(const std::string& dictStr, double score,
-           std::vector<std::string>& best_ipas,
-           std::vector<double>& best_values)
-{   
-    // If less than 20 elements, just insert in sorted position
-    if (best_values.size() < 20) {
-        // Find insertion point (descending order)
-        auto it = std::lower_bound(best_values.rbegin(), best_values.rend(), score, std::greater<double>());
-        int index = best_values.size() - (it - best_values.rbegin());
-        best_values.insert(best_values.begin() + index, score);
-        best_ipas.insert(best_ipas.begin() + index, dictStr);
-    }
-    else if (score > best_values.back()) {
-        // Replace lowest score entry
-        // Remove last elements
-        best_values.pop_back();
-        best_ipas.pop_back();
-
-        // Insert new entry in correct place
-        auto it = std::lower_bound(best_values.rbegin(), best_values.rend(), score, std::greater<double>());
-        int index = best_values.size() - (it - best_values.rbegin());
-        best_values.insert(best_values.begin() + index, score);
-        best_ipas.insert(best_ipas.begin() + index, dictStr);
-    }
 }
