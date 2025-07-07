@@ -65,6 +65,7 @@ int main(int argc, char* argv[]) {
     std::string str;
     std::cout << "string: ";
     std::getline(std::cin, str);
+    str = run_espeak_ng(str);
 
     while (str != "exit") {
         // Run fuzzy match
@@ -88,6 +89,7 @@ int main(int argc, char* argv[]) {
 
         std::cout << "\nstring: ";
         std::getline(std::cin, str);
+        str = run_espeak_ng(str);
     }
 
     return 0;
