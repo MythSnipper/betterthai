@@ -33,6 +33,10 @@ int main(int argc, char* argv[]){
     std::cout << "parsing json...\n";
     json data = json::parse(dictfile);
     std::cout << "done\n";
+
+    //Declare stuff so work:
+    std::string str;
+    std::vector<std::string> ipa_keys;
     
 
     //loop through dict to get ipas
@@ -49,7 +53,7 @@ int main(int argc, char* argv[]){
 
          // Run fuzzy matching against keys
         std::vector<std::pair<std::string, double>> matches =
-            extract<std::string, std::vector<std::string>>(str, ipa_keys, 80.0);
+            extract<std::string, std::vector<std::string>>(str, ipa_keys, 86.9);
 
         if (!matches.empty()) {
             std::cout << "Best matches:\n";
@@ -65,6 +69,7 @@ int main(int argc, char* argv[]){
     }
 
     return 0;
+}
 }
 
 
