@@ -1,26 +1,8 @@
 #include "../include/main.h"
 
-template <typename Sentence1,
-        typename Iterable, typename Sentence2 = typename Iterable::value_type>
-std::vector<std::pair<Sentence2, double>>
-extract(const Sentence1& query, const Iterable& choices, const double score_cutoff = 0.0)
-{
-    std::vector<std::pair<Sentence2, double>> results;
-    rapidfuzz::fuzz::CachedRatio<typename Sentence1::value_type> scorer(query);
-
-    for (const auto& choice : choices) {
-        double score = scorer.similarity(choice, score_cutoff);
-        if (score >= score_cutoff) {
-            results.emplace_back(choice, score);
-        }
-    }
-
-    return results;
-}
 
 int main(int argc, char* argv[]){
-    std::cout << "testing the rapidfuzz library:\n";
-
+    std::cout << "testing betterthai:\n";
 
     //read file
     std::cout << "opening file...\n";
@@ -34,43 +16,64 @@ int main(int argc, char* argv[]){
     json data = json::parse(dictfile);
     std::cout << "done\n";
 
-    //Declare stuff so work:
+
+    std::vector<double> best_values;
+    std::vector<std::string> best_ipas;
+
+
     std::string str;
-    std::vector<std::string> ipa_keys;
-    
+    std::cout << "string: ";
+    std::getline(std::cin, str);
 
-    //loop through dict to get ipas
-    for (auto it = data.begin(); it != data.end(); ++it) {
-        ipa_keys.push_back(it.key());
-    }
+    while(str != "exit"){
+        best_values.clear();
+        best_ipas.clear();
 
-    while(true){
-        std::cout << "\nType a word (or 'exit'):\n> ";
-        //get input string
-        std::getline(std::cin, str);
         
-        if (str == "exit") break;
 
-         // Run fuzzy matching against keys
-        std::vector<std::pair<std::string, double>> matches =
-            extract<std::string, std::vector<std::string>>(str, ipa_keys, 50.0);
-
-        if (!matches.empty()) {
-            std::cout << "Best matches:\n";
-            for (const auto& [match, score] : matches) {
-                std::cout << "- " << match << " (score: " << score << ")\n";
-                const auto& words = data[match];
-                for (const auto& word : words) {
-                    std::cout << "  → " << word << "\n";
-            }
+        //loop through dict
+        for(auto it = data.begin(); it != data.end(); it++){
+            std::string dictStr = it.key();
+            double score = rapidfuzz::fuzz::ratio(str, dictStr);
+            jesus(dictStr, score, best_ipas, best_values);
         }
-    } else {
-        std::cout << "No good fuzzy matches found.\n";
+        std::cout << "done\n";
+        std::cout << "best IPAs:\n";
+        for(uint8_t i=0;i<best_ipas.size();i++){
+            std::cout << best_ipas[i] << ": " << best_values[i] << "\n";
+        }
+
+
+        std::cout << "string: ";
+        std::getline(std::cin, str);
     }
+
 
     return 0;
 }
+
+void jesus(const std::string& dictStr, double score,
+           std::vector<std::string>& best_ipas,
+           std::vector<double>& best_values)
+{   
+    // If less than 20 elements, just insert in sorted position
+    if (best_values.size() < 20) {
+        // Find insertion point (descending order)
+        auto it = std::lower_bound(best_values.rbegin(), best_values.rend(), score, std::greater<double>());
+        int index = best_values.size() - (it - best_values.rbegin());
+        best_values.insert(best_values.begin() + index, score);
+        best_ipas.insert(best_ipas.begin() + index, dictStr);
+    }
+    else if (score > best_values.back()) {
+        // Replace lowest score entry
+        // Remove last elements
+        best_values.pop_back();
+        best_ipas.pop_back();
+
+        // Insert new entry in correct place
+        auto it = std::lower_bound(best_values.rbegin(), best_values.rend(), score, std::greater<double>());
+        int index = best_values.size() - (it - best_values.rbegin());
+        best_values.insert(best_values.begin() + index, score);
+        best_ipas.insert(best_ipas.begin() + index, dictStr);
+    }
 }
-
-
-

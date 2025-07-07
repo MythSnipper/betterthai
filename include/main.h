@@ -12,7 +12,8 @@
 using rapidfuzz::fuzz::ratio;
 using json = nlohmann::json;
 
-
-void crash_out();
+void jesus(const std::string& dictStr, double score,
+           std::vector<std::string>& best_ipas,
+           std::vector<double>& best_values);
 
 #endif
