@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
 
          // Run fuzzy matching against keys
         std::vector<std::pair<std::string, double>> matches =
-            extract<std::string, std::vector<std::string>>(str, ipa_keys, 86.9);
+            extract<std::string, std::vector<std::string>>(str, ipa_keys, 50.0);
 
         if (!matches.empty()) {
             std::cout << "Best matches:\n";
