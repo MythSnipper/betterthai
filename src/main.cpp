@@ -18,6 +18,30 @@ extract(const Sentence1& query, const Iterable& choices, const double score_cuto
     return results;
 }
 
+bool is_arch_linux() {
+    std::ifstream os_release("/etc/os-release");
+    std::string line;
+    while (std::getline(os_release, line)) {
+        if (line.find("ID=arch") != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string run_espeak_ng(std::string text){
+    if (is_arch_linux()) {
+        std::string command = "espeak-ng --ipa=3 -qx \"" + text + "\"";
+        int result = system(command.c_str());
+        if (result != 0) {
+            std::cerr << "espeak-ng failed\n";
+        }
+    } else {
+        std::cout << "Not running on Arch Linux. Imagine not using arch linux lol :skull: \nFailure! Install arch today for only FREE!\nI USE ARCH BTW\n";
+    }
+}
+
+
 int main(int argc, char* argv[]) {
     std::cout << "testing betterthai:\n";
 
