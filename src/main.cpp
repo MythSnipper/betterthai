@@ -1,5 +1,23 @@
 #include "../include/main.h"
 
+template <typename Sentence1,
+        typename Iterable, typename Sentence2 = typename Iterable::value_type>
+std::vector<std::pair<Sentence2, double>>
+extract(const Sentence1& query, const Iterable& choices, const double score_cutoff = 0.0)
+{
+    std::vector<std::pair<Sentence2, double>> results;
+    rapidfuzz::fuzz::CachedRatio<typename Sentence1::value_type> scorer(query);
+
+    for (const auto& choice : choices) {
+        double score = scorer.similarity(choice, score_cutoff);
+        if (score >= score_cutoff) {
+            results.emplace_back(choice, score);
+        }
+    }
+
+    return results;
+}
+
 int main(int argc, char* argv[]){
     std::cout << "testing the rapidfuzz library:\n";
 
@@ -19,39 +37,32 @@ int main(int argc, char* argv[]){
 
     //loop through dict to get ipas
     for (auto it = data.begin(); it != data.end(); ++it) {
-        std::cout << it.key() << "\n";
+        ipa_keys.push_back(it.key());
     }
-
-
-    std::string str;
-    std::vector<std::string> best_ipas;
-    std::vector<double> best_values;
-
-    
 
     while(true){
+        std::cout << "\nType a word (or 'exit'):\n> ";
         //get input string
         std::getline(std::cin, str);
-        if(data.contains(str)){
-            const auto& words = data[str];
-            for (const auto& word : words) {
-                std::cout << word << "\n";
+        
+        if (str == "exit") break;
+
+         // Run fuzzy matching against keys
+        std::vector<std::pair<std::string, double>> matches =
+            extract<std::string, std::vector<std::string>>(str, ipa_keys, 80.0);
+
+        if (!matches.empty()) {
+            std::cout << "Best matches:\n";
+            for (const auto& [match, score] : matches) {
+                std::cout << "- " << match << " (score: " << score << ")\n";
+                const auto& words = data[match];
+                for (const auto& word : words) {
+                    std::cout << "  → " << word << "\n";
             }
-        } else {
-            std::cout << "IPA key not found\n";
         }
+    } else {
+        std::cout << "No good fuzzy matches found.\n";
     }
-
-/*
-
-    double score = rapidfuzz::fuzz::ratio(str1, str2);
-
-    std::cout << "\nthe score between: \n\"" << str1 << "\"\n\"" << str2 << "\"\nis: " << score << "\n";
-
-*/
-
-
-
 
     return 0;
 }
