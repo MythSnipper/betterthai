@@ -30,19 +30,27 @@ bool is_arch_linux() {
 }
 
 std::string run_espeak_ng(std::string text){
-    if (is_arch_linux()) {
-        std::string command = "espeak-ng --ipa=3 -qx \"" + text + "\"";
-        int result = system(command.c_str());
-        if (result != 0) {
-            std::cerr << "espeak-ng failed\n";
-        }
-        
-    } else {
-        std::cout << "Not running on Arch Linux. Imagine not using arch linux lol :skull: \nFailure! Install arch today for only FREE!\nI USE ARCH BTW\n";
+    if (!is_arch_linux()) {
+        std::cout << "Not running on Arch Linux. Imagine not using Arch Linux :skull:\n";
         return "";
     }
-}
 
+    std::string command = "espeak-ng --ipa=3 -qx \"" + text + "\" 2>/dev/null";
+    std::string result;
+    char buffer[128];
+
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+    if (!pipe) {
+        std::cerr << "Failed to run espeak-ng command\n";
+        return "";
+    }
+
+    while (fgets(buffer, sizeof(buffer), pipe.get()) != nullptr) {
+        result += buffer;
+    }
+    std::cout << "converted IPA: " << result << "\n";
+    return result;
+}
 
 int main(int argc, char* argv[]) {
     std::cout << "testing betterthai:\n";

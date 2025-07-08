@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 
 #include "rapidfuzz/fuzz.hpp"
 #include "nlohmann/json.hpp"
