@@ -36,8 +36,10 @@ std::string run_espeak_ng(std::string text){
         if (result != 0) {
             std::cerr << "espeak-ng failed\n";
         }
+        
     } else {
         std::cout << "Not running on Arch Linux. Imagine not using arch linux lol :skull: \nFailure! Install arch today for only FREE!\nI USE ARCH BTW\n";
+        return "";
     }
 }
 
