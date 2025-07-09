@@ -66,6 +66,14 @@ int main(int argc, char* argv[]) {
     json data = json::parse(dictfile);
     std::cout << "done\n";
 
+    // Load word frequencies
+    std::ifstream freqfile("data/word_freq.json");
+    if (!freqfile) {
+        std::cout << "failed opening word_freq.json\n";
+    return 1;
+    }
+json word_freq = json::parse(freqfile);
+
     // Extract all keys into a list
     std::vector<std::string> ipa_keys;
     for (auto it = data.begin(); it != data.end(); ++it) {
@@ -83,18 +91,22 @@ int main(int argc, char* argv[]) {
 
         // Sort by descending score
         std::sort(matches.begin(), matches.end(),
-                  [](const auto& a, const auto& b) { return a.second > b.second; });
+                [](const auto& a, const auto& b) { return a.second > b.second; });
 
         // Trim to top 20
-        if (matches.size() > 10) matches.resize(10);
+        if (matches.size() > 30) matches.resize(30);
 
         std::cout << "Top matches:\n";
         for (const auto& [match, score] : matches) {
             std::cout << match << " (" << score << "):\n";
             const auto& ipas = data[match];
-            for (const auto& ipa : ipas) {
-                std::cout << "  → " << ipa << "\n";
-            }
+            for (const auto& thai : ipas) {
+                int freq = 0;
+                if (word_freq.contains(thai) && word_freq[thai].is_number_integer()) {
+                    freq = word_freq[thai];
+                }
+    std::cout << "  → " << thai << " (freq: " << freq << ")\n";
+}
         }
 
         std::cout << "\nstring: ";
