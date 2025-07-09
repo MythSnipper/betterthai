@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
                   [](const auto& a, const auto& b) { return a.second > b.second; });
 
         // Trim to top 20
-        if (matches.size() > 20) matches.resize(20);
+        if (matches.size() > 10) matches.resize(10);
 
         std::cout << "Top matches:\n";
         for (const auto& [match, score] : matches) {
