@@ -104,7 +104,7 @@ for (const auto& [match, score] : matches) {
     const auto& ipas = data[match];
     bool has_valid = false;
 
-    // First pass: filter Thai words to display
+    // First pass: filter Thai words to  display
     std::vector<std::pair<std::string, int>> filtered_thai;
     for (const auto& thai : ipas) {
         int freq = 0;
@@ -116,7 +116,7 @@ for (const auto& [match, score] : matches) {
             filtered_thai.emplace_back(thai, freq);
             has_valid = true;
             }
-        }
+        } 
 
     // Only display matches with at least one valid Thai word
     if (!has_valid) continue;
