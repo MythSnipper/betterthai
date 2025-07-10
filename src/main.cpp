@@ -65,6 +65,8 @@ int main(int argc, char* argv[]) {
     std::cout << "parsing json...\n";
     json data = json::parse(dictfile);
     std::cout << "done\n";
+    std::cout << "Arch is the best\n";
+    std::cout << "I use Arch btw\n";
 
     // Load word frequencies
     std::ifstream freqfile("data/word_freq.json");
