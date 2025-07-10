@@ -17,7 +17,7 @@ extract(const Sentence1& query, const Iterable& choices, const double score_cuto
 
     return results;
 }
-
+//I use arch btw
 bool is_arch_linux() {
     std::ifstream os_release("/etc/os-release");
     std::string line;
