@@ -97,8 +97,7 @@ json word_freq = json::parse(freqfile);
         if (matches.size() > 30) matches.resize(30);
 
     //thing to store info
-    std::vector<std::tuple<std::string, int, int>> final_ranked;  // (thai, freq, global_rank)
-    int global_rank = 1;
+    std::vector<std::tuple<std::string, int, double>> final_ranked;  // (thai, freq, score)
 
 for (const auto& [match, score] : matches) {
     const auto& ipas = data[match];
@@ -127,16 +126,24 @@ for (const auto& [match, score] : matches) {
 
     std::cout << match << " (" << score << "):\n";
     for (const auto& [thai, freq] : filtered_thai) {
-        std::cout << "  → " << thai << " (freq: " << freq << ")  " << global_rank << "\n";
-        final_ranked.emplace_back(thai, freq, global_rank);
-        ++global_rank;
+        std::cout << "  → " << thai << " (freq: " << freq << ")  " << "hen" << "\n";
+        final_ranked.emplace_back(thai, freq, score);
     } 
 }
 // Print summary of top 10 Thai words by order of appearance
-    std::cout << "\nTop 10 Thai words:\n";
-    for (size_t i = 0; i < std::min<size_t>(10, final_ranked.size()); ++i) {
-        const auto& [thai, freq, rank] = final_ranked[i];
-        std::cout << rank << ". " << thai << " (freq: " << freq << ")\n";
+    // Sort by score descending, then freq descending
+std::sort(final_ranked.begin(), final_ranked.end(),
+    [](const auto& a, const auto& b) {
+        if (std::get<2>(a) != std::get<2>(b))  // Compare score
+            return std::get<2>(a) > std::get<2>(b);
+        else  // Tie-breaker: frequency
+            return std::get<1>(a) > std::get<1>(b);
+    });
+
+std::cout << "\nTop 10 Thai words:\n";
+for (size_t i = 0; i < std::min<size_t>(10, final_ranked.size()); ++i) {
+    const auto& [thai, freq, score] = final_ranked[i];
+    std::cout << (i + 1) << ". " << thai << " (freq: " << freq << ", score: " << score << ")\n";
 }
 
         std::cout << "\nstring: ";
