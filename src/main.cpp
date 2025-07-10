@@ -117,6 +117,10 @@ for (const auto& [match, score] : matches) {
     // Only display matches with at least one valid Thai word
     if (!has_valid) continue;
 
+    // Sort Thai words by descending frequency
+    std::sort(filtered_thai.begin(), filtered_thai.end(),
+        [](const auto& a, const auto& b) { return a.second > b.second; });
+
     std::cout << match << " (" << score << "):\n";
     for (const auto& [thai, freq] : filtered_thai) {
         std::cout << "  → " << thai << " (freq: " << freq << ")\n";
