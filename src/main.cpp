@@ -93,8 +93,8 @@ json word_freq = json::parse(freqfile);
         std::sort(matches.begin(), matches.end(),
                 [](const auto& a, const auto& b) { return a.second > b.second; });
 
-        // Trim to top 20
-        if (matches.size() > 30) matches.resize(30);
+        // Trim to top 50
+        if (matches.size() > 50) matches.resize(50);
 
     //thing to store info
     std::vector<std::tuple<std::string, int, double>> final_ranked;  // (thai, freq, score)
@@ -104,18 +104,27 @@ for (const auto& [match, score] : matches) {
     bool has_valid = false;
 
     // First pass: filter Thai words to  display
-    std::vector<std::pair<std::string, int>> filtered_thai;
-    for (const auto& thai : ipas) {
-        int freq = 0;
-        if (word_freq.contains(thai) && word_freq[thai].is_number_integer()) {
-            freq = word_freq[thai];
-        }
+    std::vector<std::pair<std::string, int>> all_thai;
+    bool has_non_zero_freq = false;
 
+for (const auto& thai : ipas) {
+    int freq = 0;
+    if (word_freq.contains(thai) && word_freq[thai].is_number_integer()) {
+        freq = word_freq[thai];
+    }
+    all_thai.emplace_back(thai, freq);
+    if (freq > 0) has_non_zero_freq = true;
+    }
+
+// Filter out zero-frequency words *only if* there's at least one non-zero
+    std::vector<std::pair<std::string, int>> filtered_thai;
+    for (const auto& [thai, freq] : all_thai) {
         if (score >= 69.0 || freq > 0) {
+            if (has_non_zero_freq && freq == 0) continue;  // Skip 0-freq if others exist
             filtered_thai.emplace_back(thai, freq);
             has_valid = true;
-            }
-        } 
+    }
+}
 
     // Only display matches with at least one valid Thai word
     if (!has_valid) continue;
