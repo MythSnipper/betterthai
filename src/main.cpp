@@ -96,6 +96,10 @@ json word_freq = json::parse(freqfile);
         // Trim to top 20
         if (matches.size() > 30) matches.resize(30);
 
+    //thing to store info
+    std::vector<std::tuple<std::string, int, int>> final_ranked;  // (thai, freq, global_rank)
+    int global_rank = 1;
+
 for (const auto& [match, score] : matches) {
     const auto& ipas = data[match];
     bool has_valid = false;
@@ -123,8 +127,16 @@ for (const auto& [match, score] : matches) {
 
     std::cout << match << " (" << score << "):\n";
     for (const auto& [thai, freq] : filtered_thai) {
-        std::cout << "  → " << thai << " (freq: " << freq << ")\n";
-    }
+        std::cout << "  → " << thai << " (freq: " << freq << ")  " << global_rank << "\n";
+        final_ranked.emplace_back(thai, freq, global_rank);
+        ++global_rank;
+    } 
+}
+// Print summary of top 10 Thai words by order of appearance
+    std::cout << "\nTop 10 Thai words:\n";
+    for (size_t i = 0; i < std::min<size_t>(10, final_ranked.size()); ++i) {
+        const auto& [thai, freq, rank] = final_ranked[i];
+        std::cout << rank << ". " << thai << " (freq: " << freq << ")\n";
 }
 
         std::cout << "\nstring: ";
