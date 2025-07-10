@@ -96,18 +96,32 @@ json word_freq = json::parse(freqfile);
         // Trim to top 20
         if (matches.size() > 30) matches.resize(30);
 
-        std::cout << "Top matches:\n";
-        for (const auto& [match, score] : matches) {
-            std::cout << match << " (" << score << "):\n";
-            const auto& ipas = data[match];
-            for (const auto& thai : ipas) {
-                int freq = 0;
-                if (word_freq.contains(thai) && word_freq[thai].is_number_integer()) {
-                    freq = word_freq[thai];
-                }
-    std::cout << "  → " << thai << " (freq: " << freq << ")\n";
-}
+for (const auto& [match, score] : matches) {
+    const auto& ipas = data[match];
+    bool has_valid = false;
+
+    // First pass: filter Thai words to display
+    std::vector<std::pair<std::string, int>> filtered_thai;
+    for (const auto& thai : ipas) {
+        int freq = 0;
+        if (word_freq.contains(thai) && word_freq[thai].is_number_integer()) {
+            freq = word_freq[thai];
         }
+
+        if (score >= 69.0 || freq > 0) {
+            filtered_thai.emplace_back(thai, freq);
+            has_valid = true;
+            }
+        }
+
+    // Only display matches with at least one valid Thai word
+    if (!has_valid) continue;
+
+    std::cout << match << " (" << score << "):\n";
+    for (const auto& [thai, freq] : filtered_thai) {
+        std::cout << "  → " << thai << " (freq: " << freq << ")\n";
+    }
+}
 
         std::cout << "\nstring: ";
         std::getline(std::cin, str);
