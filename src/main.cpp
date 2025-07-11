@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     if (!freqfile) {
         std::cout << "failed opening word_freq.json\n";
     return 1;
-    }
+    } 
 json word_freq = json::parse(freqfile);
 
     // Extract all keys into a list
