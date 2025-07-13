@@ -15,34 +15,32 @@
   (interactive)
   (setq betterthai-ime-mode (not betterthai-ime-mode))
   (setq betterthai-ime-char-buffer "")
-  (message "BetterThai IME %s" (if betterthai-ime-mode "ON" "OFF")))
+  (message "BetterThai IME mode is now: %s" (if betterthai-ime-mode "ENABLED" "DISABLED")))
 
 (defun betterthai-ime-process-filter (_proc output)
   "Handle output from the BetterThai IME process asynchronously and show in side panel."
   (let ((buffer (get-buffer-create betterthai-ime-output-buffer-name)))
     (with-current-buffer buffer
       (goto-char (point-max))
-      (insert output)
-      (when (get-buffer-window buffer)
-        (with-selected-window (get-buffer-window buffer)
-          (goto-char (point-max)))))
-    (unless (get-buffer-window betterthai-ime-output-buffer-name)
-      (display-buffer
-      (get-buffer-create betterthai-ime-output-buffer-name)
-      '(display-buffer-in-side-window . ((side . right) (window-width . 0.3)))))))
+      (insert output))
+    (unless (get-buffer-window buffer)
+      (display-buffer buffer '((display-buffer-in-side-window)
+                               (side . right)
+                               (window-width . 0.3))))))
 
 (defun betterthai-start-ime-process ()
-  "Start the persistent BetterThai IME process."
-  (unless (and betterthai-ime-process
-               (process-live-p betterthai-ime-process))
+  "Start the persistent BetterThai IME process if not already running."
+  (unless (and betterthai-ime-process (process-live-p betterthai-ime-process))
     (let ((ime-dir (expand-file-name "~/.emacs.d/betterthai-ime/"))
           (exe (expand-file-name "betterthai-ime" "~/.emacs.d/betterthai-ime/")))
+      (unless (file-executable-p exe)
+        (error "BetterThai IME executable not found or not executable: %s" exe))
       (message "Starting BetterThai IME at: %s" exe)
       (setq betterthai-ime-process
             (make-process
              :name "betterthai-ime"
              :buffer "*betterthai-ime*"
-             :stderr "*better-error*"
+             :stderr "*betterthai-error*"
              :command (list exe)
              :noquery t
              :filter #'betterthai-ime-process-filter
@@ -54,6 +52,9 @@
 
 (defun betterthai-send-buffer ()
   "Send the character buffer to the IME program."
+  (unless (and betterthai-ime-process (process-live-p betterthai-ime-process))
+    (message "IME process not running; restarting...")
+    (betterthai-start-ime-process))
   (when (process-live-p betterthai-ime-process)
     (process-send-string betterthai-ime-process
                          (concat betterthai-ime-char-buffer "\n"))))
@@ -75,15 +76,15 @@
   (if betterthai-ime-mode
       (progn
         ;; Clear the output buffer before sending new input
-        (when (get-buffer betterthai-ime-output-buffer-name)
-          (with-current-buffer betterthai-ime-output-buffer-name
-            (erase-buffer)))
+        (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
+          (when buffer
+            (with-current-buffer buffer
+              (erase-buffer))))
         (betterthai-start-ime-process)
         (betterthai-send-buffer)
         (setq betterthai-ime-char-buffer "")
         (message "IME triggered, buffer cleared."))
     (self-insert-command 1)))
-
 
 (defun betterthai-backspace-key ()
   "Handle backspace key in IME mode."

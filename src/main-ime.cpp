@@ -53,11 +53,6 @@ std::string run_espeak_ng(std::string text){
 }
 
 
-
-
-
-
-
 int main(int argc, char* argv[]) {
     std::cout << "Starting IME(cpp file btw)\n";
     // Read file
@@ -85,10 +80,13 @@ int main(int argc, char* argv[]) {
 
     std::string str;
 
-    while (str != "exit") {
+    while (true) {
         std::getline(std::cin, str);
+        if (str.length() == 1 && str[0] >= '0' && str[0] <= '9') {
+            std::cout << "Choosing thai word...\n";
+            continue;
+        }
         str = run_espeak_ng(str);
-
 
         // Run fuzzy match
         auto matches = extract<std::string, std::vector<std::string>>(str, ipa_keys, 0.0);
