@@ -79,17 +79,16 @@ int main(int argc, char* argv[]) {
     }
 
     std::string str;
-    uint8_t index;
+    int index;
     while (true) {
         std::getline(std::cin, str);
         if (str.length() == 1 && str[0] >= '0' && str[0] <= '9') {
             std::cout << "Choosing thai word...\n";
             if(str[0] == '0'){
-                index = 9;
+                index = 10;
             }
             if(str[0] > '0'){
-                index = str[0] - '0';
-                
+                index = str[0] - '0' - 1;
             }
             std::cout << "getting word number: " << (index) << "\n";
             continue;
