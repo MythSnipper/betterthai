@@ -60,55 +60,80 @@
                          (concat betterthai-ime-char-buffer "\n"))))
 
 (defun betterthai-insert-char ()
-  "Insert character into IME buffer or self-insert."
+  "Insert character into IME buffer and trigger backend."
   (interactive)
   (let ((char (string last-command-event)))
     (if betterthai-ime-mode
         (progn
           (setq betterthai-ime-char-buffer
                 (concat betterthai-ime-char-buffer char))
+          ;; Clear the output buffer
+          (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
+            (when buffer
+              (with-current-buffer buffer
+                (erase-buffer))))
+          ;; Trigger backend
+          (betterthai-start-ime-process)
+          (betterthai-send-buffer)
           (message "Buffer: %s" betterthai-ime-char-buffer))
       (self-insert-command 1))))
 
-(defun betterthai-space-key ()
-  "Handle space key press in IME mode."
-  (interactive)
-  (if betterthai-ime-mode
-      (progn
-        ;; Clear the output buffer before sending new input
-        (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
-          (when buffer
-            (with-current-buffer buffer
-              (erase-buffer))))
-        (betterthai-start-ime-process)
-        (betterthai-send-buffer)
-        (setq betterthai-ime-char-buffer "")
-        (message "IME triggered, buffer cleared."))
-    (self-insert-command 1)))
+
 
 (defun betterthai-backspace-key ()
-  "Handle backspace key in IME mode."
+  "Handle backspace key in IME mode.
+Update IME output after modifying the buffer."
   (interactive)
   (if betterthai-ime-mode
       (progn
         (when (> (length betterthai-ime-char-buffer) 0)
           (setq betterthai-ime-char-buffer
                 (substring betterthai-ime-char-buffer 0 -1)))
-        (message "Buffer: %s" betterthai-ime-char-buffer))
+        (message "Buffer: %s" betterthai-ime-char-buffer)
+        ;; Clear the output buffer
+        (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
+          (when buffer
+            (with-current-buffer buffer
+              (erase-buffer))))
+        ;; Restart the process if needed and send the new buffer
+        (betterthai-start-ime-process)
+        (betterthai-send-buffer))
     (backward-delete-char-untabify 1)))
+
+(defun betterthai-handle-number-key ()
+  "Send the number key directly to the IME process, bypassing the buffer."
+  (interactive)
+  (let ((char (string last-command-event)))
+    (when betterthai-ime-mode
+      (setq betterthai-ime-char-buffer "") ;; Clear character buffer
+      ;; Clear the output buffer
+      (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
+        (when buffer
+          (with-current-buffer buffer
+            (erase-buffer))))
+      ;; Restart the IME process if needed and send the number key
+      (betterthai-start-ime-process)
+      (process-send-string betterthai-ime-process (concat char "\n")))))
+
 
 (defvar betterthai-ime-map
   (let ((map (make-sparse-keymap)))
-    ;; Printable ASCII chars (except space)
-    (dolist (i (number-sequence ?\s ?~))
+    ;; Bind number keys to number handler
+    (dolist (i (number-sequence ?0 ?9))
+      (define-key map (char-to-string i) #'betterthai-handle-number-key))
+
+    ;; Bind all printable characters including space (now part of insert-char)
+    (dolist (i (number-sequence ?\s ?~)) ; space to ~
       (let ((char (char-to-string i)))
-        (unless (string= char " ")
+        (unless (string-match-p "[0-9]" char) ; skip numbers
           (define-key map char #'betterthai-insert-char))))
-    ;; Special keys
-    (define-key map (kbd "SPC") #'betterthai-space-key)
+
+    ;; Backspace
     (define-key map (kbd "DEL") #'betterthai-backspace-key)
     map)
   "Keymap for BetterThai IME minor mode.")
+
+
 
 (define-minor-mode betterthai-ime-minor-mode
   "Minor mode for BetterThai IME."
