@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t; -*-
+
 (defvar betterthai-ime-mode nil
   "Non-nil if BetterThai IME mode is enabled.")
 
