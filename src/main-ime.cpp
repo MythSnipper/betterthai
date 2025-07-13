@@ -166,11 +166,11 @@ int main(int argc, char* argv[]) {
                     return std::get<1>(a) > std::get<1>(b);
         });
 
+        top_thai_words.clear();
         std::cout << "\nTop 10 Thai words:\n";
         for (size_t i = 0; i < std::min<size_t>(10, final_ranked.size()); ++i) {
             const auto& [thai, freq, score] = final_ranked[i];
             std::cout << (i + 1) << ". " << thai << " (freq: " << freq << ", score: " << score << ")\n";
-            top_thai_words.clear();
             top_thai_words.push_back(thai);  // Save word for later use
         }
         std::cout.flush();
