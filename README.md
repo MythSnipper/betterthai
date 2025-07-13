@@ -22,8 +22,11 @@ packages: base base-devel bash gcc make emacs
 How to use
 ----------
 In an arch linux environment with dependencies installed, run using bash:
+
 `git clone https://github.com/MythSnipper/betterthai`
+
 `cd betterthai`
+
 `make emacs-init emacs`
 
 
