@@ -85,19 +85,18 @@ int main(int argc, char* argv[]) {
     while (true) {
         std::getline(std::cin, str);
         if (str.length() == 1 && str[0] >= '0' && str[0] <= '9') {
-            std::cout << "Choosing thai word...\n";
             if(str[0] == '0'){
                 index = 9;
             }
             if(str[0] > '0'){
                 index = str[0] - '0' - 1;
             }
-            std::cout << "getting word number: " << (index) << "\n";
-            std::cout << "Saved thai words: \n";
-            for (size_t i = 0; i < top_thai_words.size(); ++i) {
-                std::cout << (i + 1) << ". " << top_thai_words[i] << '\n';
-            }
-            std::cout << "Selected: " << top_thai_words[index] << "\n";
+            //std::cout << "getting word number: " << (index) << "\n";
+            //std::cout << "Saved thai words: \n";
+            //for (size_t i = 0; i < top_thai_words.size(); ++i) {
+            //    std::cout << (i + 1) << ". " << top_thai_words[i] << '\n';
+            //}
+            std::cout << top_thai_words[index];
             std::cout.flush();
             continue;
         }

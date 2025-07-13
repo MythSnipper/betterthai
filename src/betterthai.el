@@ -103,19 +103,32 @@ Update IME output after modifying the buffer."
     (backward-delete-char-untabify 1)))
 
 (defun betterthai-handle-number-key ()
-  "Send the number key directly to the IME process, bypassing the buffer."
+  "Send the number key directly to the IME process, clear char buffer,
+and insert the response string into the current buffer at point."
   (interactive)
-  (let ((char (string last-command-event)))
-    (when betterthai-ime-mode
+  (when betterthai-ime-mode
+    (let ((char (string last-command-event)))
       (setq betterthai-ime-char-buffer "") ;; Clear character buffer
-      ;; Clear the output buffer
-      (let ((buffer (get-buffer betterthai-ime-output-buffer-name)))
-        (when buffer
-          (with-current-buffer buffer
-            (erase-buffer))))
-      ;; Restart the IME process if needed and send the number key
+      ;; Ensure process is running
       (betterthai-start-ime-process)
-      (process-send-string betterthai-ime-process (concat char "\n")))))
+
+      ;; Define a temporary filter to capture output
+      (let ((output ""))
+        (let ((temp-filter
+               (lambda (_proc data)
+                 (setq output (concat output data)))))
+          ;; Temporarily set the filter to capture output
+          (set-process-filter betterthai-ime-process temp-filter)
+          ;; Send the key
+          (process-send-string betterthai-ime-process (concat char "\n"))
+          ;; Wait a short time for response (adjust if needed)
+          (sleep-for 0.05)
+          ;; Restore original filter
+          (set-process-filter betterthai-ime-process #'betterthai-ime-process-filter))
+
+        ;; Insert the result into the buffer
+        (when (and output (not (string-empty-p (string-trim output))))
+          (insert (string-trim output)))))))
 
 
 (defvar betterthai-ime-map
