@@ -137,9 +137,9 @@ int main(int argc, char* argv[]) {
             std::sort(filtered_thai.begin(), filtered_thai.end(),
                 [](const auto& a, const auto& b) { return a.second > b.second; });
 
-            std::cout << match << " (" << score << "):\n";
+            //std::cout << match << " (" << score << "):\n";
             for (const auto& [thai, freq] : filtered_thai) {
-                std::cout << "  → " << thai << " (freq: " << freq << ")  " << "hen" << "\n";
+                //std::cout << "  → " << thai << " (freq: " << freq << ")  " << "hen" << "\n";
                 final_ranked.emplace_back(thai, freq, score);
             } 
         }
