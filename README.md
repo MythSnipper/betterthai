@@ -53,7 +53,7 @@ Leonidas Paul Lambrides
 
 Testers
 -------
-[Sidhiboon Pibulnakarintr](https://github.com/asianhen)
+["Gontzes Man"](https://github.com/Cxyoo367o)
 
 Still in progress of recruiting more 
 
