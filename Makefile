@@ -8,7 +8,7 @@ build:
 	$(CXX) src/main.cpp -o build/test -Iinclude/rapidfuzz-cpp -Iinclude/json/include
 	./build/test
 
-emacs-init:<
+emacs-init:
 	mkdir -p ~/.emacs.d/betterthai-ime
 	touch ~/.emacs.d/init.el
 	echo '(load-file (expand-file-name "~/.emacs.d/betterthai-ime/betterthai.el"))' > ~/.emacs.d/init.el
