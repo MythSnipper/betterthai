@@ -10,7 +10,7 @@ This is a emacs plugin with a C++ backend that is designed to work with the emac
 Usage information
 =================
 
-better Thai vIDK, copyright idk, License: IDK
+better Thai v, copyright idk, License: MIT
 
 Warning: this has been developed and tested solely on Arch Linux, use on other things at your own risk
 
