@@ -27,9 +27,9 @@
         (with-selected-window (get-buffer-window buffer)
           (goto-char (point-max)))))
     (unless (get-buffer-window betterthai-ime-output-buffer-name)
-      (display-buffer-in-side-window
-       (get-buffer betterthai-ime-output-buffer-name)
-       '((side . right) (slot . 0) (window-width . 0.33))))))
+      (display-buffer
+      (get-buffer-create betterthai-ime-output-buffer-name)
+      '(display-buffer-in-side-window . ((side . right) (window-width . 0.3)))))))
 
 (defun betterthai-start-ime-process ()
   "Start the persistent BetterThai IME process."
