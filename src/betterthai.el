@@ -20,15 +20,18 @@
   (message "BetterThai IME mode is now: %s" (if betterthai-ime-mode "ENABLED" "DISABLED")))
 
 (defun betterthai-ime-process-filter (_proc output)
-  "Handle output from the BetterThai IME process asynchronously and show in side panel."
+  "Replace output in the BetterThai IME buffer, showing only the latest result."
   (let ((buffer (get-buffer-create betterthai-ime-output-buffer-name)))
     (with-current-buffer buffer
-      (goto-char (point-max))
-      (insert output))
+      (let ((inhibit-read-only t))
+        (erase-buffer)  ;; Clear on every new output
+        (insert output)))
+    ;; Always display updated buffer
     (unless (get-buffer-window buffer)
       (display-buffer buffer '((display-buffer-in-side-window)
                                (side . right)
                                (window-width . 0.3))))))
+
 
 (defun betterthai-start-ime-process ()
   "Start the persistent BetterThai IME process if not already running."
