@@ -10,7 +10,7 @@ This is a emacs plugin with a C++ backend that is designed to work with the emac
 Usage information
 =================
 
-better Thai v, copyright idk, License: MIT
+betterthai v1.0-alpha, copyright (c) 2025 Sidhiboon Pibulnakarintr, Haoming Lyu, Niko Alois Attilakos, Leonidas Paul Lambrides, Jarupat Bulpakdi, License: MIT
 
 Warning: this has been developed and tested solely on Arch Linux, use on other things at your own risk
 
