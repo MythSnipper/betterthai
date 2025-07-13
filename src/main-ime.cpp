@@ -61,14 +61,18 @@ std::string run_espeak_ng(std::string text){
 int main(int argc, char* argv[]) {
     std::cout << "Starting IME(cpp file btw)\n";
     // Read file
-    std::ifstream dictfile("data/dict.json");
+    //std::string home = std::getenv("HOME");
+    //std::ifstream dictfile(home + "/.emacs.d/betterthai-ime/data/dict.json");
+    std::ifstream dictfile("/home/mythsnipper/.emacs.d/betterthai-ime/data/dict.json");
     if (!dictfile) {
+        std::cerr << "No dictfile\n";
         return 1;
     }
     json data = json::parse(dictfile);
     // Load word frequencies
-    std::ifstream freqfile("data/word_freq.json");
+    std::ifstream freqfile("/home/mythsnipper/.emacs.d/betterthai-ime/data/word_freq.json");
     if (!freqfile) {
+        std::cerr << "No freqfile\n";
         return 1;
     }
     json word_freq = json::parse(freqfile);
