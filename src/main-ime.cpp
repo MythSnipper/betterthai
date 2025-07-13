@@ -89,9 +89,9 @@ int main(int argc, char* argv[]) {
             }
             if(str[0] > '0'){
                 index = str[0] - '0';
-                std::cout << "getting word number: " << index << "\n";
+                
             }
-
+            std::cout << "getting word number: " << (index) << "\n";
             continue;
         }
         str = run_espeak_ng(str);
