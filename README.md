@@ -46,12 +46,15 @@ Head Developers
 Support Team
 ------------
 [Jarupat Bulpakdi](https://github.com/mightythemight) - main liason 
+
 Leonidas Paul Lambrides
+
 [Niko Alois Attilakos](https://github.com/NotNoper)
 
 Testers
 -------
 [Sidhiboon Pibulnakarintr](https://github.com/asianhen)
+
 Still in progress of recruiting more 
 
 Thanks
