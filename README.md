@@ -1,4 +1,4 @@
-# betterThai
+# betterthai
 Convert English character input to IPA using Eglish pronunciation rules and then converting IPA to Thai in order to type Thai
 
 As a person who is significantly better at English than his native language, and is very lazy, I complain about the horrible design of the Thai Kedmanee keyboard layout and struggle to type more than 10 words per minute with it. It is clear to me that this is not a problem that just affects me, but a significant portion of students in Thailand that attend international schools. Since I am taking Thai IB Lang&Lit A SL next year, I would be screwed if I didn't make an improved Thai keyboard before the end of summer break.
@@ -31,10 +31,33 @@ In an arch linux environment with dependencies installed, run using bash:
 
 
 Now, open emacs and open a file you wish to edit.
+
 Alt+X betterthai
 
 After it has been ran press F1 to toggle between regular US keyboard and betterthai input method.
 
+Credits
+=======
+Head Developers
+---------------
+* [Sidhiboon Pibulnakarintr](https://github.com/asianhen)
+* [Haoming Lyu](https://github.com/MythSnipper)
+
+Support Team
+------------
+[Jarupat Bulpakdi](https://github.com/mightythemight) - main liason 
+Leonidas Paul Lambrides
+[Niko Alois Attilakos](https://github.com/NotNoper)
+
+Testers
+-------
+[Sidhiboon Pibulnakarintr](https://github.com/asianhen)
+Still in progress of recruiting more 
+
+Thanks
+------
+Greatest thanks to [Silas S. Brown](https://github.com/ssb22) for sugessting the use of espeak and emacs for this. That small piece of advice was invaluable to the sucess of this project
+
 Trademarks
-----------
+==========
 Something is a registered trademark of something. Any other trademarks we have mentioned without realising are trademarks of their respective holders.
