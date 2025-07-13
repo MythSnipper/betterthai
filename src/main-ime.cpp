@@ -79,11 +79,19 @@ int main(int argc, char* argv[]) {
     }
 
     std::string str;
-
+    uint8_t index;
     while (true) {
         std::getline(std::cin, str);
         if (str.length() == 1 && str[0] >= '0' && str[0] <= '9') {
             std::cout << "Choosing thai word...\n";
+            if(str[0] == '0'){
+                index = 9;
+            }
+            if(str[0] > '0'){
+                index = str[0] - '0';
+                std::cout << "getting word number: " << index << "\n";
+            }
+
             continue;
         }
         str = run_espeak_ng(str);
