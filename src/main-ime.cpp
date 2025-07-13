@@ -80,17 +80,25 @@ int main(int argc, char* argv[]) {
 
     std::string str;
     int index;
+    std::vector<std::string> top_thai_words;
+
     while (true) {
         std::getline(std::cin, str);
         if (str.length() == 1 && str[0] >= '0' && str[0] <= '9') {
             std::cout << "Choosing thai word...\n";
             if(str[0] == '0'){
-                index = 10;
+                index = 9;
             }
             if(str[0] > '0'){
                 index = str[0] - '0' - 1;
             }
             std::cout << "getting word number: " << (index) << "\n";
+            std::cout << "Saved thai words: \n";
+            for (size_t i = 0; i < top_thai_words.size(); ++i) {
+                std::cout << (i + 1) << ". " << top_thai_words[i] << '\n';
+            }
+            std::cout << "Selected: " << top_thai_words[index] << "\n";
+            std::cout.flush();
             continue;
         }
         str = run_espeak_ng(str);
@@ -162,6 +170,8 @@ int main(int argc, char* argv[]) {
         for (size_t i = 0; i < std::min<size_t>(10, final_ranked.size()); ++i) {
             const auto& [thai, freq, score] = final_ranked[i];
             std::cout << (i + 1) << ". " << thai << " (freq: " << freq << ", score: " << score << ")\n";
+
+            top_thai_words.push_back(thai);  // Save word for later use
         }
         std::cout.flush();
     }
