@@ -63,4 +63,4 @@ Greatest thanks to [Silas S. Brown](https://github.com/ssb22) for sugessting the
 
 Trademarks
 ==========
-Something is a registered trademark of something. Any other trademarks we have mentioned without realising are trademarks of their respective holders.
+Any trademarks we have mentioned without realising are trademarks of their respective holders.
