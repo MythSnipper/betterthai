@@ -10,9 +10,11 @@ build:
 
 emacs-init:
 	mkdir -p ~/.emacs.d/betterthai-ime
+	touch ~/.emacs.d/init.el
 	echo '(load-file (expand-file-name "~/.emacs.d/betterthai-ime/betterthai.el"))' >> ~/.emacs.d/init.el
 	sudo cp -r data ~/.emacs.d/betterthai-ime/
 	sudo chmod -R 744 ~/.emacs.d/betterthai-ime/data
+	sudo chown -R $$USER:$$USER ~/.emacs.d
 
 emacs:
 	sudo cp src/betterthai.el ~/.emacs.d/betterthai-ime/
