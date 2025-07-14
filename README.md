@@ -10,7 +10,7 @@ This is a emacs plugin with a C++ backend that is designed to work with the emac
 Usage information
 =================
 
-Betterthai v1.0-Alpha, Copyright (c) 2025 Sidhiboon Pibulnakarintr, Haoming Lyu, Niko Alois Attilakos, Leonidas Paul Lambrides, Jarupat Bulpakdi, License: MIT
+Betterthai v1.0-Alpha, License: GPLv3
 
 Warning: this has been developed and tested solely on Arch Linux, use it on other operating systems at your own risk.
 
@@ -57,13 +57,13 @@ Support Team
 ------------
 [Jarupat Bulpakdi](https://github.com/mightythemight) - main liason 
 
-Leonidas Paul Lambrides
+Leonidas Paul Lambrides - Helped us find a library to best implement levenshtein distance
 
-[Niko Alois Attilakos](https://github.com/NotNoper)
+[Niko Alois Attilakos](https://github.com/NotNoper) - Figured out how to create and parse json files
 
 Testers
 -------
-["Gontzes Man"](https://github.com/Cxyoo367o)
+["Gontzes Man"](https://github.com/Cxyoo367o) - Helped us identify the need for more detailed instructions
 
 Still in progress of recruiting more 
 
