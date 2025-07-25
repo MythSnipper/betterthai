@@ -46,6 +46,9 @@ Alt+X betterthai
 
 After it has been ran press F1 to toggle between regular US keyboard and betterthai input method.
 
+
+* [Official Discord Server](https://discord.gg/mUKhGpWaWG)
+
 Credits
 =======
 Head Developers
